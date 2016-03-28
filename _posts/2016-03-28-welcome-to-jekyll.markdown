@@ -5,7 +5,7 @@ date:   2016-03-28 07:58:35 +0200
 categories: pico-8 tutorial
 ---
 
-![screenshot]({{ site.url }}/img/space-invaders-001.png)
+![screenshot]({{ site.url }}/pico-8-tutorials/img/space-invaders-001.png)
 
 {% highlight lua %}
 -- space invaders - PICO-8 tutorial
