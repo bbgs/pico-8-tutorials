@@ -17,6 +17,9 @@ a_speed = 4
 a_x_step = 2
 a_y_step = 8
 
+-- canon position
+c_x_offset = 64
+
 -- tick - updated every 1/30 second
 tick = 0
 
@@ -43,11 +46,18 @@ function _update()
   if tick % a_speed == 0 then
     move_aliens()
   end
+
+  if btn(0) and c_x_offset > 0 then
+    c_x_offset -= 2
+  elseif btn(1) and c_x_offset < 120 then
+    c_x_offset += 2
+  end
 end
 
 function _draw()
   rectfill(0,0,127,127,0)
   draw_aliens()
+  spr(16,c_x_offset,120)
 end
 
 function _init()
