@@ -6,7 +6,7 @@ categories: jekyll update
 ---
 
 <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-<script async type="text/javascript" src="space-invaders.js"></script>
+<script async type="text/javascript" src="/pico-8-tutorials/js/space-invaders.js"></script>
 
 You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
