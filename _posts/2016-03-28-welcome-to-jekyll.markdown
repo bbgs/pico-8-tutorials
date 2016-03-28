@@ -1,29 +1,42 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
+title:  "PICO-8 tutorial - space invaders"
 date:   2016-03-28 07:58:35 +0200
-categories: jekyll update
+categories: pico-8 tutorial
 ---
 
-<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-<script async type="text/javascript" src="/pico-8-tutorials/js/space-invaders.js"></script>
+![screenshot]({{ site.url }}/img/space-invaders-001.png)
 
-You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+{% highlight lua %}
+-- space invaders - PICO-8 tutorial
+-- https://github.com/bbgs/pico-8-tutorials
 
-To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+aliens = {}
 
-Jekyll also offers powerful support for code snippets:
-
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
+function draw_aliens()
+  for col=1,10 do
+    for row=1,5 do
+      spr(aliens[col][row].sprite,col*10,row*10)
+    end
+  end
 end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+
+function _update()
+end
+
+function _draw()
+  rectfill(0,0,127,127,0)
+  draw_aliens()
+end
+
+function _init()
+  for col=1,10 do
+    aliens[col] = {}
+    for row=1,5 do
+      add(aliens[col], {sprite=row})
+    end
+  end
+end
 {% endhighlight %}
 
-Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
-
-[jekyll-docs]: http://jekyllrb.com/docs/home
-[jekyll-gh]:   https://github.com/jekyll/jekyll
-[jekyll-talk]: https://talk.jekyllrb.com/
+[github]: https://github.com/bbgs/pico-8-tutorials
