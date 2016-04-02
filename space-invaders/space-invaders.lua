@@ -48,6 +48,36 @@ lives = 3
 -- Game running or not?
 running = false
 
+-- Star field
+--   x      x coordiate
+--   y      y coordinate
+--   color  PICO-8 color index
+star_field = {}
+
+-- Create star field.
+function create_star_field()
+  star_field = {}
+  for i=1,100 do
+    x = flr(rnd(127))
+    y = flr(rnd(127))
+    color = flr(rnd(2)) + 5
+    add(star_field,{x=x, y=y, color=color})
+  end
+end
+
+-- Draw a single star.
+function draw_star(star)
+  if tick % 7 == 0 then
+    star.color = flr(rnd(2)) + 5
+  end
+  line(star.x,star.y,star.x,star.y,star.color)
+end
+
+-- Draw the star field.
+function draw_star_field()
+  foreach(star_field, draw_star)
+end
+
 -- Draw all aliens (note each alien is drawn with collective_x / collective_y offset).
 function draw_aliens()
 
@@ -165,8 +195,8 @@ function check_bullet()
   end
 end
 
+-- Check bomb / cannon collision.
 function check_bomb()
-
   if bomb_y==-1 then
     return
   end
@@ -176,17 +206,7 @@ function check_bomb()
   end
 end
 
-function die()
-    lives-=1
-    bomb_y=-1
-    bomb_x=-1
-    if lives==0 then
-      running = false
-      lives=3
-    end
-    _init()
-end
-
+-- Check if aliens has reached the bottom (player dies!).
 function check_alien()
   for col=1,10 do
     for row=5,1,-1 do
@@ -199,6 +219,19 @@ function check_alien()
   end
 end
 
+-- Player died!
+function die()
+    lives-=1
+    bomb_y=-1
+    bomb_x=-1
+    if lives==0 then
+      running = false
+      lives=3
+    end
+    _init()
+end
+
+-- Are all aliens dead?
 function all_dead()
   for col=1,10 do
     for row=1,5 do
@@ -211,44 +244,49 @@ function all_dead()
   return true
 end
 
+-- Run the game...
+function run_game()
+  -- Move aliens every collective_speed ticks (to get that jerky space invaders
+  -- movement).
+  if tick % collective_speed == 0 then
+    move_aliens()
+  end
+
+  move_bomb()
+  move_bullet()
+
+  check_bullet()
+  check_bomb()
+  check_alien()
+
+  add_bomb()
+
+  -- Move cannon.
+  if btn(0) and cannon_x > 0 then
+    cannon_x -= 2
+  elseif btn(1) and cannon_x < 120 then
+    cannon_x += 2
+  end
+
+  -- Fire cannon.
+  if btn(4) and bullet_y == -1 then
+    bullet_y = 116
+    bullet_x = cannon_x+3
+    sfx(0)
+  end
+
+  if all_dead() then
+    _init()
+  end
+end
+
 function _update()
   tick += 1
 
   if running then
-
-    -- Move aliens every collective_speed ticks (to get that jerky space invaders
-    -- movement).
-    if tick % collective_speed == 0 then
-      move_aliens()
-    end
-
-    move_bomb()
-    move_bullet()
-
-    check_bullet()
-    check_bomb()
-    check_alien()
-
-    add_bomb()
-
-    -- Move cannon.
-    if btn(0) and cannon_x > 0 then
-      cannon_x -= 2
-    elseif btn(1) and cannon_x < 120 then
-      cannon_x += 2
-    end
-
-    -- Fire cannon.
-    if btn(4) and bullet_y == -1 then
-      bullet_y = 116
-      bullet_x = cannon_x+3
-    end
-  
-    if all_dead() then
-      _init()
-    end
-
+    run_game()
   else
+    -- Press X to start...
     if btn(5) then
       running = true
       score = 0
@@ -259,20 +297,24 @@ end
 function _draw()
   rectfill(0,0,127,127,0)
 
-  draw_aliens()
-  draw_cannon()
-  draw_bullet()
-  draw_bomb()
-
-  print(score,2,2,14)
-  print("LIVES "..lives,100,2,14)
+  draw_star_field()
 
   if not running then
-    print("PRESS X TO START",32,80,4)
+    print("  rymdinvaderarna  ",28,32,6)
+    print("     bbgs 2016     ",28,48,6)
+    print(" press x to start  ",28,80,6)
+  else
+    draw_aliens()
+    draw_cannon()
+    draw_bullet()
+    draw_bomb()
+    print(score,2,2,14)
+    print("LIVES "..lives,100,2,14)
   end
 end
 
 function _init()
+  create_star_field()
   aliens = {}
   collective_x = 0
   collective_y = 0
