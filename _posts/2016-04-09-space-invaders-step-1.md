@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "PICO-8 tutorial - space invaders - step 1"
+title:  "Space Invaders - step 1"
 date:   2016-04-09 08:16 +0200
 categories: pico-8 tutorial
 ---
